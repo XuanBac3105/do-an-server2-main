@@ -76,11 +76,11 @@ pipeline {
                 script {
                     if (isUnix()) {
                         sh '''
-                            # Generate SQL and filter out dotenv messages and warnings
+                            # Generate SQL and filter out all non-SQL lines
                             npx prisma migrate diff \\
                                 --from-empty \\
                                 --to-schema-datamodel prisma/schema.test.prisma \\
-                                --script 2>&1 | grep -v "\\[dotenv" | grep -v "^Loaded Prisma" | grep -v "^Prisma config" | grep -v "^warn" | grep -v "^$" > prisma/test-schema.sql
+                                --script 2>&1 | grep -v "\\[dotenv" | grep -v "^Loaded Prisma" | grep -v "^Prisma config" | grep -v "^warn" | grep -v "For more information" | grep -v "^  " | grep -v "^$" > prisma/test-schema.sql
                             
                             # Verify file was created and contains SQL
                             if [ ! -s prisma/test-schema.sql ]; then
